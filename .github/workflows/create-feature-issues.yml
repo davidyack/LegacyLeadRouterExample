@@ -5,7 +5,6 @@ on:
   push:
     branches:
       - main
-      - copilot/add-enhancements-to-readme
 
 jobs:
   create-issues:
@@ -39,10 +38,13 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
+            const title1 = 'Feature Request: Automated Lead Scoring Engine with ML-Based Prioritization';
+            const existing1 = await github.rest.issues.listForRepo({ owner: context.repo.owner, repo: context.repo.repo, state: 'all' });
+            if (existing1.data.some(i => i.title === title1)) { console.log('Issue 1 already exists'); return; }
             await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: 'Feature Request: Automated Lead Scoring Engine with ML-Based Prioritization',
+              title: title1,
               labels: ['feature request'],
               body: `## Summary
             Implement an automated lead scoring engine that uses machine learning to prioritize inbound leads before they enter the routing workflow.
@@ -75,10 +77,13 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
+            const title2 = 'Feature Request: Real-Time Rep Capacity Dashboard and Overflow Alerts';
+            const existing2 = await github.rest.issues.listForRepo({ owner: context.repo.owner, repo: context.repo.repo, state: 'all' });
+            if (existing2.data.some(i => i.title === title2)) { console.log('Issue 2 already exists'); return; }
             await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: 'Feature Request: Real-Time Rep Capacity Dashboard and Overflow Alerts',
+              title: title2,
               labels: ['feature request'],
               body: `## Summary
             Build a real-time capacity dashboard in D365 Sales that shows each rep's current lead load against their monthly capacity limit, with automated overflow routing triggers.
@@ -118,10 +123,13 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
+            const title3 = 'Feature Request: Automated SLA Tracking with Multi-Timezone Escalation Engine';
+            const existing3 = await github.rest.issues.listForRepo({ owner: context.repo.owner, repo: context.repo.repo, state: 'all' });
+            if (existing3.data.some(i => i.title === title3)) { console.log('Issue 3 already exists'); return; }
             await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: 'Feature Request: Automated SLA Tracking with Multi-Timezone Escalation Engine',
+              title: title3,
               labels: ['feature request'],
               body: `## Summary
             Implement an automated SLA tracking system inside D365 Sales that monitors follow-up deadlines (Section 4) across multiple time zones and triggers escalation actions when SLAs are at risk or missed.
@@ -164,10 +172,13 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
+            const title4 = 'Feature Request: Partner Portal Integration for Automated Referral Lead Ingestion';
+            const existing4 = await github.rest.issues.listForRepo({ owner: context.repo.owner, repo: context.repo.repo, state: 'all' });
+            if (existing4.data.some(i => i.title === title4)) { console.log('Issue 4 already exists'); return; }
             await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: 'Feature Request: Partner Portal Integration for Automated Referral Lead Ingestion',
+              title: title4,
               labels: ['feature request'],
               body: `## Summary
             Build a self-service partner portal that integrates with D365 Sales to automate the ingestion, acknowledgment, and routing of partner referral leads described in Section 3.2.
@@ -211,10 +222,13 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
+            const title5 = 'Feature Request: Intelligent Round-Robin Algorithm with Weighted Capacity and Skill Balancing';
+            const existing5 = await github.rest.issues.listForRepo({ owner: context.repo.owner, repo: context.repo.repo, state: 'all' });
+            if (existing5.data.some(i => i.title === title5)) { console.log('Issue 5 already exists'); return; }
             await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: 'Feature Request: Intelligent Round-Robin Algorithm with Weighted Capacity and Skill Balancing',
+              title: title5,
               labels: ['feature request'],
               body: `## Summary
             Enhance the inbound call/chat round-robin routing rule (Section 3.2) and SMB lead distribution to use a weighted, skill-aware algorithm that accounts for rep capacity, recent activity, and product specialization.
@@ -226,7 +240,7 @@ jobs:
             Replace the simple round-robin with a **Weighted Scoring Algorithm** that calculates a routing score for each eligible rep in real time:
 
             **Scoring Formula:**
-            \`\`\`
+            \`\`\`text
             RoutingScore = (CapacityWeight × RemainingCapacity%) 
                          + (SkillWeight × ProductMatchScore) 
                          + (FairnessWeight × DaysSinceLastLead)
