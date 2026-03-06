@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contoso Sales – Lead Router</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- ── Top Bar ── -->
+<div class="topbar">
+  <!-- Microsoft Dynamics 365 style icon -->
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <rect width="24" height="24" rx="3" fill="white" fill-opacity="0.15"/>
+    <path d="M5 5h6v6H5zM13 5h6v6h-6zM5 13h6v6H5zM13 13h6v6h-6z" fill="white"/>
+  </svg>
+  <span class="product-name">Dynamics 365 Sales &nbsp;|&nbsp; Contoso Lead Router</span>
+  <span class="badge">v2.4 &nbsp;·&nbsp; Q1 2025</span>
+</div>
+
+<!-- ── Hero ── -->
+<div class="hero">
+  <h1>Lead Routing &amp; Territory Assignment</h1>
+  <p>Automatically routes inbound leads to the right Account Executive based on Contoso's Sales Policy v2.4</p>
+</div>
+
+<!-- ── Main ── -->
+<main>
+
+  <!-- Lead Input Form -->
+  <div class="card">
+    <div class="card-header">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M8 1a4 4 0 1 1 0 8A4 4 0 0 1 8 1zm0 9c4.42 0 7 2.24 7 3.5V15H1v-1.5C1 12.24 3.58 10 8 10z" fill="#605e5c"/>
+      </svg>
+      New Lead Details
+    </div>
+    <div class="card-body">
+      <form id="leadForm">
+        <div class="form-grid">
+
+          <!-- Company Name -->
+          <div class="full">
+            <label for="companyName">Company Name</label>
+            <input type="text" id="companyName" placeholder="e.g. Fabrikam Inc" autocomplete="off" />
+          </div>
+
+          <!-- State -->
+          <div>
+            <label for="state">State / Region</label>
+            <select id="state">
+              <option value="">— Select State —</option>
+              <optgroup label="Pacific NW (Alex Rivera)">
+                <option value="WA">Washington (WA)</option>
+                <option value="OR">Oregon (OR)</option>
+              </optgroup>
+              <optgroup label="California (Jordan Lee)">
+                <option value="CA">California (CA)</option>
+              </optgroup>
+              <optgroup label="Southwest (Morgan Chen)">
+                <option value="AZ">Arizona (AZ)</option>
+                <option value="NM">New Mexico (NM)</option>
+                <option value="NV">Nevada (NV)</option>
+                <option value="UT">Utah (UT)</option>
+              </optgroup>
+              <optgroup label="Mountain West (Taylor Brooks)">
+                <option value="CO">Colorado (CO)</option>
+                <option value="WY">Wyoming (WY)</option>
+                <option value="MT">Montana (MT)</option>
+                <option value="ID">Idaho (ID)</option>
+              </optgroup>
+              <optgroup label="Midwest (Casey Kim)">
+                <option value="IL">Illinois (IL)</option>
+                <option value="IN">Indiana (IN)</option>
+                <option value="MN">Minnesota (MN)</option>
+                <option value="IA">Iowa (IA)</option>
+                <option value="MO">Missouri (MO)</option>
+                <option value="KS">Kansas (KS)</option>
+                <option value="NE">Nebraska (NE)</option>
+                <option value="SD">South Dakota (SD)</option>
+                <option value="ND">North Dakota (ND)</option>
+                <option value="WI">Wisconsin (WI)</option>
+              </optgroup>
+              <optgroup label="Great Lakes (Dana Nguyen)">
+                <option value="MI">Michigan (MI)</option>
+                <option value="OH">Ohio (OH)</option>
+              </optgroup>
+              <optgroup label="Southeast (Riley Patel)">
+                <option value="GA">Georgia (GA)</option>
+                <option value="FL">Florida (FL)</option>
+                <option value="NC">North Carolina (NC)</option>
+                <option value="SC">South Carolina (SC)</option>
+                <option value="TN">Tennessee (TN)</option>
+                <option value="AL">Alabama (AL)</option>
+                <option value="MS">Mississippi (MS)</option>
+                <option value="VA">Virginia (VA)</option>
+                <option value="KY">Kentucky (KY)</option>
+                <option value="AR">Arkansas (AR)</option>
+                <option value="LA">Louisiana (LA)</option>
+              </optgroup>
+              <optgroup label="Mid-Atlantic (Quinn Torres)">
+                <option value="MD">Maryland (MD)</option>
+                <option value="DE">Delaware (DE)</option>
+                <option value="NJ">New Jersey (NJ)</option>
+                <option value="PA">Pennsylvania (PA)</option>
+                <option value="DC">Washington D.C. (DC)</option>
+              </optgroup>
+              <optgroup label="Northeast (Avery Johnson)">
+                <option value="NY">New York (NY)</option>
+                <option value="MA">Massachusetts (MA)</option>
+                <option value="CT">Connecticut (CT)</option>
+                <option value="RI">Rhode Island (RI)</option>
+                <option value="NH">New Hampshire (NH)</option>
+                <option value="VT">Vermont (VT)</option>
+                <option value="ME">Maine (ME)</option>
+              </optgroup>
+              <optgroup label="Texas (Skyler Williams)">
+                <option value="TX">Texas (TX)</option>
+              </optgroup>
+            </select>
+          </div>
+
+          <!-- Lead Source -->
+          <div>
+            <label for="leadSource">Lead Source</label>
+            <select id="leadSource">
+              <option value="Inbound Web Form">Inbound Web Form</option>
+              <option value="Trade Show/Event">Trade Show / Event</option>
+              <option value="Partner Referral">Partner Referral</option>
+              <option value="Azure Trial Signup">Azure Trial Signup</option>
+              <option value="Copilot Studio POC">Copilot Studio POC Request</option>
+              <option value="Renewal/Upsell">Renewal / Upsell Signal</option>
+              <option value="Inbound Call/Chat">Inbound Call / Chat</option>
+              <option value="Executive Referral">Executive Referral</option>
+            </select>
+          </div>
+
+          <!-- Employees -->
+          <div>
+            <label for="employees">Employees</label>
+            <input type="number" id="employees" min="1" placeholder="e.g. 500" />
+          </div>
+
+          <!-- ARR -->
+          <div>
+            <label for="arr">Annual Revenue ($M)</label>
+            <input type="number" id="arr" min="0" step="0.1" placeholder="e.g. 5.0" />
+          </div>
+
+          <!-- Product Interest -->
+          <div class="full">
+            <label for="productInterest">Product Interest</label>
+            <select id="productInterest">
+              <option value="">— Select Product —</option>
+              <option value="Azure">Azure</option>
+              <option value="Copilot Studio">Copilot Studio</option>
+              <option value="Power Platform">Power Platform</option>
+              <option value="D365">Dynamics 365 (D365)</option>
+              <option value="Microsoft 365">Microsoft 365</option>
+              <option value="Teams">Microsoft Teams</option>
+              <option value="AI Services">AI Services</option>
+              <option value="Fabric">Microsoft Fabric</option>
+              <option value="Customer Insights">Customer Insights</option>
+            </select>
+          </div>
+
+          <!-- Conditional: Azure Trial Usage -->
+          <div class="full conditional-field" id="azureUsageField">
+            <label for="azureTrialUsage">Azure Trial Monthly Usage ($)</label>
+            <input type="number" id="azureTrialUsage" min="0" placeholder="e.g. 750" />
+          </div>
+
+          <!-- Conditional: Event Owner Rep -->
+          <div class="full conditional-field" id="eventOwnerField">
+            <label for="eventOwnerRep">Event Sponsor / Owner Rep</label>
+            <select id="eventOwnerRep">
+              <option value="">— Select Rep —</option>
+              <option>Alex Rivera</option>
+              <option>Jordan Lee</option>
+              <option>Morgan Chen</option>
+              <option>Taylor Brooks</option>
+              <option>Casey Kim</option>
+              <option>Dana Nguyen</option>
+              <option>Riley Patel</option>
+              <option>Quinn Torres</option>
+              <option>Avery Johnson</option>
+              <option>Skyler Williams</option>
+            </select>
+          </div>
+
+          <!-- Conditional: Existing Account -->
+          <div class="full conditional-field" id="existingAccountField">
+            <label for="existingAccountRep">Current Account Owner</label>
+            <select id="existingAccountRep">
+              <option value="">— Select Current AE —</option>
+              <option>Alex Rivera</option>
+              <option>Jordan Lee</option>
+              <option>Morgan Chen</option>
+              <option>Taylor Brooks</option>
+              <option>Casey Kim</option>
+              <option>Dana Nguyen</option>
+              <option>Riley Patel</option>
+              <option>Quinn Torres</option>
+              <option>Avery Johnson</option>
+              <option>Skyler Williams</option>
+            </select>
+          </div>
+
+          <!-- Route Button -->
+          <div class="full">
+            <button type="submit" class="btn-route">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M2 8l10-5-3 5 3 5-10-5z" fill="white"/>
+              </svg>
+              Route This Lead
+            </button>
+          </div>
+
+        </div><!-- /form-grid -->
+      </form>
+    </div>
+  </div><!-- /card -->
+
+  <!-- Result Panel -->
+  <div class="card" id="result-panel">
+    <div class="card-header">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle cx="8" cy="8" r="7" stroke="#107c10" stroke-width="2"/>
+        <path d="M5 8l2 2 4-4" stroke="#107c10" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      Routing Result
+    </div>
+    <div class="card-body" id="result-body">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+
+  <!-- Team Directory Table -->
+  <div class="card team-table-wrap">
+    <div class="card-header">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect x="1" y="3" width="14" height="10" rx="1" stroke="#605e5c" stroke-width="1.5"/>
+        <path d="M1 6h14" stroke="#605e5c" stroke-width="1.5"/>
+        <path d="M5 6v7M11 6v7" stroke="#605e5c" stroke-width="1"/>
+      </svg>
+      Sales Team &amp; Territory Directory
+    </div>
+    <div class="card-body" style="padding:0;">
+      <table class="team-table" id="teamTable">
+        <thead>
+          <tr>
+            <th>Rep</th>
+            <th>Territory</th>
+            <th>Segment</th>
+            <th>Product Focus</th>
+            <th>Capacity</th>
+          </tr>
+        </thead>
+        <tbody id="teamTableBody">
+          <!-- Populated by JS -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  Contoso Sales Lead Routing Policy v2.4 &nbsp;·&nbsp; Effective Q1 2025 &nbsp;·&nbsp; Owner: VP Sales Operations &nbsp;·&nbsp; Demo Application
+</footer>
+
+<script src="leadRouter.js"></script>
+<script>
+  // ── Avatar colours ──────────────────────────────────────────────────────
+  const REP_COLORS = {
+    "Alex Rivera":    "#0078d4",
+    "Jordan Lee":     "#5c2d91",
+    "Morgan Chen":    "#107c10",
+    "Taylor Brooks":  "#d83b01",
+    "Casey Kim":      "#008272",
+    "Dana Nguyen":    "#004b50",
+    "Riley Patel":    "#e3008c",
+    "Quinn Torres":   "#ca5010",
+    "Avery Johnson":  "#0062af",
+    "Skyler Williams":"#498205",
+  };
+
+  function initials(name) {
+    return name.split(" ").map(p => p[0]).join("").toUpperCase();
+  }
+
+  // ── Populate Team Table ─────────────────────────────────────────────────
+  function renderTeamTable() {
+    const tbody = document.getElementById("teamTableBody");
+    tbody.innerHTML = "";
+    REPS.forEach(rep => {
+      const pct = Math.min(rep.currentLeads / rep.capacity * 100, 100);
+      const fillClass = pct >= 100 ? "over" : pct >= 80 ? "warn" : "";
+      const row = document.createElement("tr");
+      row.id = `rep-row-${rep.name.replace(/\s+/g, "-")}`;
+      row.innerHTML = `
+        <td>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="width:28px;height:28px;border-radius:50%;background:${REP_COLORS[rep.name] || "#0078d4"};
+                 display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;font-weight:700;flex-shrink:0;">
+              ${initials(rep.name)}
+            </div>
+            <span style="font-weight:600;">${rep.name}</span>
+          </div>
+        </td>
+        <td>${rep.territory}</td>
+        <td><span class="badge-segment badge-${rep.segment.replace(/[^a-zA-Z-]/g,"")}">${rep.segment}</span></td>
+        <td>${rep.productFocus.join(" · ")}</td>
+        <td>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <div class="capacity-bar-wrap">
+              <div class="capacity-bar-bg">
+                <div class="capacity-bar-fill ${fillClass}" style="width:${pct}%;"></div>
+              </div>
+            </div>
+            <span style="font-size:11px;color:var(--ms-gray-90);">${rep.currentLeads}/${rep.capacity}</span>
+          </div>
+        </td>
+      `;
+      tbody.appendChild(row);
+    });
+  }
+
+  // ── Conditional Fields ──────────────────────────────────────────────────
+  document.getElementById("leadSource").addEventListener("change", function () {
+    const v = this.value;
+    toggle("azureUsageField",    v === "Azure Trial Signup");
+    toggle("eventOwnerField",    v === "Trade Show/Event");
+    toggle("existingAccountField", v === "Renewal/Upsell");
+  });
+
+  function toggle(id, show) {
+    document.getElementById(id).classList.toggle("visible", show);
+  }
+
+  // ── Form Submit ─────────────────────────────────────────────────────────
+  document.getElementById("leadForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const lead = {
+      companyName:        document.getElementById("companyName").value.trim(),
+      state:              document.getElementById("state").value,
+      employees:          parseInt(document.getElementById("employees").value) || 0,
+      arr:                parseFloat(document.getElementById("arr").value) || 0,
+      productInterest:    document.getElementById("productInterest").value,
+      leadSource:         document.getElementById("leadSource").value,
+      azureTrialUsage:    parseFloat(document.getElementById("azureTrialUsage").value) || 0,
+      eventOwnerRep:      document.getElementById("eventOwnerRep").value,
+      isExistingAccount:  !!document.getElementById("existingAccountRep").value,
+      existingAccountRep: document.getElementById("existingAccountRep").value,
+    };
+
+    const result = routeLead(lead);
+    renderResult(result, lead);
+    highlightRepRow(result.assignedRep);
+  });
+
+  // ── Render Result ───────────────────────────────────────────────────────
+  function renderResult(result, lead) {
+    const panel = document.getElementById("result-panel");
+    const body  = document.getElementById("result-body");
+    panel.classList.add("visible");
+
+    const color   = REP_COLORS[result.assignedRep] || "#605e5c";
+    const avatarClass = result.isSDRPool ? "sdr" : "";
+    const avatarContent = result.isSDRPool
+      ? "SDR"
+      : initials(result.assignedRep);
+
+    const segClass = result.segment.replace(/[^a-zA-Z-]/g, "");
+
+    let html = `
+      <div class="result-rep">
+        <div class="rep-avatar ${avatarClass}" style="background:${color};">
+          ${avatarContent}
+        </div>
+        <div>
+          <div class="rep-name">${result.assignedRep}</div>
+          <div class="rep-meta">
+            ${result.territory !== "N/A" ? result.territory + " &nbsp;·&nbsp; " : ""}
+            <span class="badge-segment badge-${segClass}">${result.segment}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-row">
+        <span class="info-label">Routing Reason</span>
+        <span class="info-value">${result.reason}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Product Focus</span>
+        <span class="info-value">${result.productFocus}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Response SLA</span>
+        <span class="info-value">⏱ ${result.sla}</span>
+      </div>
+    `;
+
+    if (result.escalation) {
+      html += `
+        <div class="info-row">
+          <span class="info-label">Escalation Path</span>
+          <span class="info-value">${result.escalation}</span>
+        </div>
+      `;
+    }
+
+    if (result.isOverflow) {
+      html += `<div class="alert-overflow">⚠ Primary rep at capacity – routed to next best-fit rep in same segment.</div>`;
+    }
+
+    if (result.isSDRPool) {
+      html += `<div class="alert-sdr">🔔 No automatic match found. Lead has been added to the SDR pool for manual assignment within 4 business hours.</div>`;
+    }
+
+    // Increment lead count on the matched rep and refresh table
+    if (!result.isSDRPool) {
+      const rep = REPS.find(r => r.name === result.assignedRep);
+      if (rep) {
+        rep.currentLeads = Math.min(rep.currentLeads + 1, rep.capacity + 5);
+        renderTeamTable();
+      }
+    }
+
+    body.innerHTML = html;
+    panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+
+  // ── Highlight matched rep row ──────────────────────────────────────────
+  function highlightRepRow(repName) {
+    // Clear previous highlights
+    document.querySelectorAll(".team-table tr.highlighted").forEach(r => r.classList.remove("highlighted"));
+    const id = `rep-row-${repName.replace(/\s+/g, "-")}`;
+    const row = document.getElementById(id);
+    if (row) {
+      row.style.transition = "background .3s";
+      row.style.background = "var(--ms-blue-light)";
+      setTimeout(() => { row.style.background = ""; }, 2500);
+    }
+  }
+
+  // ── Initial render ──────────────────────────────────────────────────────
+  renderTeamTable();
+</script>
+</body>
+</html>
