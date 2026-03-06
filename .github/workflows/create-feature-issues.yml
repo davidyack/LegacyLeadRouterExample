@@ -1,0 +1,278 @@
+name: Create Feature Request Issues
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  create-issues:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Create feature request label
+        uses: actions/github-script@v7
+        with:
+          script: |
+            try {
+              await github.rest.issues.getLabel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                name: 'feature request'
+              });
+              console.log('Label already exists');
+            } catch (e) {
+              await github.rest.issues.createLabel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                name: 'feature request',
+                color: '0075ca',
+                description: 'New feature or request'
+              });
+              console.log('Label created');
+            }
+
+      - name: Create Issue 1 - Automated Lead Scoring Engine
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title1 = 'Feature Request: Automated Lead Scoring Engine with ML-Based Prioritization';
+            const existing1 = await github.rest.issues.listForRepo({ owner: context.repo.owner, repo: context.repo.repo, state: 'all' });
+            if (existing1.data.some(i => i.title === title1)) { console.log('Issue 1 already exists'); return; }
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: title1,
+              labels: ['feature request'],
+              body: `## Summary
+            Implement an automated lead scoring engine that uses machine learning to prioritize inbound leads before they enter the routing workflow.
+
+            ## Background
+            The current routing policy (Section 3.1) routes leads based on territory, segment, and product match but does not score leads for quality or likelihood to convert. High-value leads (e.g., Azure trial signups with usage > $500/mo) are treated the same as low-intent inbound web form leads until a rep manually reviews them.
+
+            ## Proposed Enhancement
+            Add a lead scoring layer to the D365 Sales routing pipeline that assigns each incoming lead a score (0–100) based on:
+
+            - **Firmographic signals**: Company size, ARR estimate, industry vertical
+            - **Behavioral signals**: Website visit frequency, content downloaded, trial usage data
+            - **Intent signals**: Keywords in web form text, job title of submitter (e.g., CTO vs. intern)
+            - **Recency**: How recently the lead was created or last engaged
+
+            Leads scoring **70+** are flagged as *Hot* and bypass Step 5 (SDR Pool), routing directly to the best-fit AE with a priority notification. Leads scoring **30–69** follow the standard routing flow. Leads scoring **< 30** enter a nurture queue.
+
+            ## Acceptance Criteria
+            - [ ] Score is computed automatically within 60 seconds of lead creation in D365
+            - [ ] Score is visible to reps and SDR managers on the lead record
+            - [ ] Routing engine respects priority tiers (Hot / Warm / Nurture) before applying existing Steps 1–5
+            - [ ] Score model is retrained quarterly using closed-won/lost data from D365
+            - [ ] Admin UI allows weighting adjustments per segment (Enterprise, Mid-Market, SMB)
+
+            ## Value
+            Ensures Enterprise AEs (capacity 15) spend time on the highest-value leads first, improving conversion rates without adding headcount.`
+            });
+
+      - name: Create Issue 2 - Real-Time Rep Capacity Dashboard
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title2 = 'Feature Request: Real-Time Rep Capacity Dashboard and Overflow Alerts';
+            const existing2 = await github.rest.issues.listForRepo({ owner: context.repo.owner, repo: context.repo.repo, state: 'all' });
+            if (existing2.data.some(i => i.title === title2)) { console.log('Issue 2 already exists'); return; }
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: title2,
+              labels: ['feature request'],
+              body: `## Summary
+            Build a real-time capacity dashboard in D365 Sales that shows each rep's current lead load against their monthly capacity limit, with automated overflow routing triggers.
+
+            ## Background
+            Section 2 defines soft capacity ceilings per rep (e.g., Alex Rivera: 15/mo, Riley Patel: 25/mo), and Section 3.1 Step 4 states that leads route to the next best-fit rep when the primary rep is at capacity. Currently, this capacity check is manual and reactive—SDR managers must periodically review queues to identify overflow situations.
+
+            ## Proposed Enhancement
+            Create a live capacity dashboard with the following features:
+
+            **Dashboard View:**
+            - Tile per AE showing: capacity limit, current month's routed leads, remaining capacity, and % utilization
+            - Color-coded indicators: green (< 70%), yellow (70–90%), red (> 90% or at limit)
+            - Drill-down to see individual leads routed to each rep
+
+            **Automated Alerts:**
+            - Email + Teams notification to SDR Manager when any rep hits 80% of monthly capacity
+            - Automatic overflow routing activates at 95% capacity (not just 100%)
+            - Weekly digest to VP Sales Operations showing capacity trends by segment
+
+            **Overflow Logic Enhancement:**
+            - Prioritized backup rep list per AE (currently undefined in the policy)
+            - Round-robin overflow distribution across same-segment reps at < 80% capacity
+
+            ## Acceptance Criteria
+            - [ ] Dashboard refreshes every 15 minutes with current lead counts from D365
+            - [ ] Alerts sent within 5 minutes of crossing 80% and 95% thresholds
+            - [ ] Backup rep assignments configurable in D365 admin settings
+            - [ ] Historical capacity utilization reports available for the past 12 months
+            - [ ] Mobile-responsive view for field AEs
+
+            ## Value
+            Prevents missed SLAs caused by undetected capacity overflow and ensures equitable lead distribution across same-segment reps.`
+            });
+
+      - name: Create Issue 3 - SLA Tracking and Escalation Automation
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title3 = 'Feature Request: Automated SLA Tracking with Multi-Timezone Escalation Engine';
+            const existing3 = await github.rest.issues.listForRepo({ owner: context.repo.owner, repo: context.repo.repo, state: 'all' });
+            if (existing3.data.some(i => i.title === title3)) { console.log('Issue 3 already exists'); return; }
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: title3,
+              labels: ['feature request'],
+              body: `## Summary
+            Implement an automated SLA tracking system inside D365 Sales that monitors follow-up deadlines (Section 4) across multiple time zones and triggers escalation actions when SLAs are at risk or missed.
+
+            ## Background
+            Section 4 defines clear SLA targets: Enterprise leads (2 business hours), Mid-Market (4 business hours), SMB (1 business day), Partner referrals (1 hour acknowledgment + 4 hours contact), and Executive referrals (same-day). Section 5 notes that reps missing SLA may be reassigned. Currently, SLA tracking is manual or relies on basic D365 activity reminders, which do not account for business hours across different time zones (e.g., Pacific NW vs. Southeast).
+
+            ## Proposed Enhancement
+            Build an SLA engine with the following capabilities:
+
+            **SLA Clock Logic:**
+            - Business hours calculated based on rep's territory time zone (e.g., Pacific NW = PST, Southeast = EST)
+            - SLA countdown pauses on weekends and company holidays
+            - SLA timer starts at lead assignment timestamp, not creation timestamp
+
+            **Escalation Workflow:**
+            | Time Remaining | Action |
+            |---|---|
+            | 50% of SLA remaining | In-app reminder to AE via Teams |
+            | 25% of SLA remaining | Email alert to AE + SDR Manager |
+            | SLA breached | Auto-notify SDR Manager; reassignment flag raised in D365 |
+            | 2x SLA breached | VP Sales Operations notified; lead auto-reassigned to backup rep |
+
+            **Reporting:**
+            - Monthly SLA compliance report per rep, segment, and lead source
+            - SLA breach trend analysis to identify systemic routing issues
+
+            ## Acceptance Criteria
+            - [ ] SLA timers are timezone-aware using rep territory mappings from Section 2
+            - [ ] Holiday calendar configurable by admin (US federal holidays + company-specific)
+            - [ ] Escalation notifications delivered via both email and Microsoft Teams
+            - [ ] SLA compliance visible on lead record and in manager dashboard
+            - [ ] Reassignment triggered automatically after 2x SLA breach per Section 5 policy
+
+            ## Value
+            Eliminates manual SLA monitoring overhead for SDR managers and reduces the risk of high-value Enterprise and Executive leads going stale due to missed follow-up windows.`
+            });
+
+      - name: Create Issue 4 - Partner Portal Integration
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title4 = 'Feature Request: Partner Portal Integration for Automated Referral Lead Ingestion';
+            const existing4 = await github.rest.issues.listForRepo({ owner: context.repo.owner, repo: context.repo.repo, state: 'all' });
+            if (existing4.data.some(i => i.title === title4)) { console.log('Issue 4 already exists'); return; }
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: title4,
+              labels: ['feature request'],
+              body: `## Summary
+            Build a self-service partner portal that integrates with D365 Sales to automate the ingestion, acknowledgment, and routing of partner referral leads described in Section 3.2.
+
+            ## Background
+            Section 3.2 defines Partner Referral routing: leads go to the referring partner's aligned rep, with Partner Desk handling unaligned referrals. Section 4 sets a strict 1-business-hour acknowledgment SLA to the partner and 4-hour contact SLA with the lead. Currently, partner referrals arrive via email or manual form submissions, requiring SDR staff to manually enter leads into D365, match to the aligned rep, and send acknowledgment emails—introducing delays and human error.
+
+            ## Proposed Enhancement
+            Create a Partner Portal with these components:
+
+            **Referral Submission Form:**
+            - Partners log in with a unique portal account (Azure AD B2C)
+            - Form fields: company name, contact, phone, email, estimated deal size, product interest, notes
+            - Automatic deduplication check against existing D365 leads and contacts
+            - Partners receive an immediate submission confirmation with a reference number
+
+            **Automated Routing Integration:**
+            - On submission, lead is created in D365 and tagged as "Partner Referral"
+            - Partner's aligned rep is auto-populated via partner-to-rep mapping table in D365
+            - If no mapping exists, lead routes to Partner Desk queue with urgent priority flag
+            - Partner acknowledgment email auto-sent within 5 minutes of submission (satisfying 1-hour SLA)
+
+            **Partner Visibility:**
+            - Partners can view the status of their submitted referrals (Submitted → Contacted → Opportunity Created → Closed)
+            - Email notification to partner when AE makes first contact with the referred lead
+            - Monthly referral report sent to each active partner showing pipeline attribution
+
+            ## Acceptance Criteria
+            - [ ] Portal supports SSO via Azure AD B2C for partner authentication
+            - [ ] Lead auto-created in D365 within 2 minutes of partner submission
+            - [ ] Partner acknowledgment email sent automatically, within 5 minutes of submission
+            - [ ] Partner-to-rep mapping configurable by admins without code changes
+            - [ ] Referral status updates visible to partners in real-time via portal
+            - [ ] Deduplication prevents double-entry for the same lead company + contact
+
+            ## Value
+            Reduces SDR manual data entry time for partner referrals, ensures the 1-hour partner acknowledgment SLA is met consistently, and increases partner satisfaction by providing transparent referral tracking.`
+            });
+
+      - name: Create Issue 5 - Intelligent Round-Robin with Weighted Capacity Balancing
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title5 = 'Feature Request: Intelligent Round-Robin Algorithm with Weighted Capacity and Skill Balancing';
+            const existing5 = await github.rest.issues.listForRepo({ owner: context.repo.owner, repo: context.repo.repo, state: 'all' });
+            if (existing5.data.some(i => i.title === title5)) { console.log('Issue 5 already exists'); return; }
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: title5,
+              labels: ['feature request'],
+              body: `## Summary
+            Enhance the inbound call/chat round-robin routing rule (Section 3.2) and SMB lead distribution to use a weighted, skill-aware algorithm that accounts for rep capacity, recent activity, and product specialization.
+
+            ## Background
+            Section 3.2 defines a "real-time round-robin" for inbound calls/chat among Riley Patel, Quinn Torres, and Skyler Williams. Section 3.1 Step 4 handles capacity overflow. However, the current round-robin is simple rotation-based, ignoring: (a) remaining monthly capacity differences between reps (Riley: 25, Quinn: 25, Skyler: 22), (b) product specialization fit (e.g., a Power Platform inbound chat should prefer Quinn Torres over Skyler Williams), and (c) rep availability (e.g., rep currently on a call).
+
+            ## Proposed Enhancement
+            Replace the simple round-robin with a **Weighted Scoring Algorithm** that calculates a routing score for each eligible rep in real time:
+
+            **Scoring Formula:**
+            \`\`\`text
+            RoutingScore = (CapacityWeight × RemainingCapacity%) 
+                         + (SkillWeight × ProductMatchScore) 
+                         + (FairnessWeight × DaysSinceLastLead)
+            \`\`\`
+
+            **Default Weights (configurable by admin):**
+            - Capacity Weight: 40%
+            - Skill/Product Match Weight: 35%
+            - Fairness (recency) Weight: 25%
+
+            **Product Match Scoring:**
+            | Lead Product Interest | Riley (M365/Teams) | Quinn (Power Platform/Copilot) | Skyler (D365/Power Platform) |
+            |---|---|---|---|
+            | Microsoft 365 / Teams | 100 | 50 | 60 |
+            | Power Platform | 60 | 100 | 90 |
+            | D365 | 50 | 70 | 100 |
+            | Copilot | 60 | 90 | 70 |
+            | General / Unknown | 70 | 70 | 70 |
+
+            **Availability Integration:**
+            - CRM presence indicator (Available / Busy / Away) pulled from Microsoft Teams status API
+            - Reps marked "Busy" are skipped; lead queued for next available rep within 5 minutes
+
+            ## Acceptance Criteria
+            - [ ] Routing score computed in < 500ms per lead for real-time inbound routing
+            - [ ] Weights configurable via D365 admin panel without code deployment
+            - [ ] Teams presence API integrated to reflect real-time rep availability
+            - [ ] Product match matrix updatable by SDR Manager
+            - [ ] Routing decision logged on each lead record (score breakdown visible to managers)
+            - [ ] Fallback to simple round-robin if scoring engine is unavailable (graceful degradation)
+            - [ ] Monthly fairness report showing lead distribution variance across SMB reps
+
+            ## Value
+            Increases SMB lead-to-opportunity conversion by routing inbound leads to the most qualified available rep rather than the next rep in rotation, while maintaining fairness across the SMB team.`
+            });
