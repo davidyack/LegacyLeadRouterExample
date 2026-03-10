@@ -6,6 +6,7 @@ Version 2.4  |  Effective: Q1 2025  |  Owner: VP Sales Operations
 1. Purpose & Scope
 This document defines Contoso's lead routing rules, territory assignments, and escalation procedures for the North America commercial sales team. All inbound leads, partner referrals, and event-sourced opportunities are governed by these policies to ensure fast follow-up, fair distribution, and clear ownership.
 These rules apply to all 10 quota-carrying Account Executives (AEs) across Enterprise, Mid-Market, and SMB segments.
+The reverse-engineered BXT use cases from this routing engine are documented in `bxt_use_cases.xlsx` in this repository.
 2. Sales Team & Territory Assignments
 The table below maps each AE to their primary territory, target segment, product specialization, and monthly lead capacity.
 
