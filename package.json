@@ -1,0 +1,12 @@
+{
+  "name": "legacy-lead-router-example-tests",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Test-only harness for the Contoso Lead Router static demo (characterization tests).",
+  "scripts": {
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "jsdom": "^30.1.1"
+  }
+}
