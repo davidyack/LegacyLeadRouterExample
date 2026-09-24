@@ -1,0 +1,1 @@
+Implement the approved CI change described in PROPOSAL.md for this repository. CI/workflow/config files only — no application code, no new tests, no weakened tests. The pipeline must be green on day one (pre-existing failures baselined by name), and where the plan includes the coverage ratchet, initialize its floor from a real measurement. Deliver one pull request.
