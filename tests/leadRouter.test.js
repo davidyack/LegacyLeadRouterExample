@@ -73,7 +73,9 @@ describe('Executive referral routing (TC-1 — bmb_e_O9SGVZ3Vot)', () => {
   });
 
   test('contrast: a non-executive-referral lead with the same company profile is routed elsewhere and is not escalated to VP Sales', () => {
-    // @pmc-criterion master:business-rule:executive-referrals-go-to-avery
+    // Contrast case for the executive-referral criterion: the declared
+    // protection binding for that criterion lives on the strengthened test
+    // above so the criterion keeps a single, unambiguous declared binding.
     const lead = {
       companyName: 'Unnamed Prospect Co',
       state: 'CA',
@@ -90,50 +92,48 @@ describe('Executive referral routing (TC-1 — bmb_e_O9SGVZ3Vot)', () => {
 });
 
 describe('Lead segmentation thresholds (TC-3 — bmb_zjwI1dzbe_z2)', () => {
+  // The declared protection binding for the enterprise-thresholds criterion
+  // lives on the "surfaces through routeLead's observable result" test
+  // below, which exercises the rule through the outermost stable seam
+  // (routeLead). These boundary tests exercise the same rule directly through
+  // the segmentation helper and remain as additional, unannotated coverage so
+  // the criterion keeps a single, unambiguous declared binding.
   test('1,000 or more employees classifies a lead as Enterprise', () => {
-    // @pmc-criterion master:business-rule:enterprise-thresholds-determine-lead-segment
     assert.equal(getSegmentFromSize(1000, 0), 'Enterprise');
     assert.equal(getSegmentFromSize(5000, 0), 'Enterprise');
   });
 
   test('ARR above $10M classifies a lead as Enterprise even below the employee threshold', () => {
-    // @pmc-criterion master:business-rule:enterprise-thresholds-determine-lead-segment
     assert.equal(getSegmentFromSize(10, 10.01), 'Enterprise');
   });
 
   test('boundary: 999 employees alone does not qualify as Enterprise', () => {
-    // @pmc-criterion master:business-rule:enterprise-thresholds-determine-lead-segment
     assert.equal(getSegmentFromSize(999, 0), 'Mid-Market');
   });
 
   test('boundary: exactly $10M ARR alone does not qualify as Enterprise (threshold is "above" $10M)', () => {
-    // @pmc-criterion master:business-rule:enterprise-thresholds-determine-lead-segment
     // Contrast case for the Enterprise ARR condition: $10M exactly must fall
     // through to the Mid-Market check, not the Enterprise one.
     assert.equal(getSegmentFromSize(999, 10), 'Mid-Market');
   });
 
   test('100 or more employees classifies a non-Enterprise lead as Mid-Market', () => {
-    // @pmc-criterion master:business-rule:enterprise-thresholds-determine-lead-segment
     assert.equal(getSegmentFromSize(100, 0), 'Mid-Market');
     assert.equal(getSegmentFromSize(500, 0), 'Mid-Market');
   });
 
   test('ARR of at least $1M classifies a non-Enterprise lead as Mid-Market', () => {
-    // @pmc-criterion master:business-rule:enterprise-thresholds-determine-lead-segment
     assert.equal(getSegmentFromSize(10, 1), 'Mid-Market');
     assert.equal(getSegmentFromSize(10, 5), 'Mid-Market');
   });
 
   test('boundary: 99 employees and $0.99M ARR together do not qualify as Mid-Market', () => {
-    // @pmc-criterion master:business-rule:enterprise-thresholds-determine-lead-segment
     // Contrast case for the Mid-Market conditions: just under both thresholds
     // must fall through to SMB.
     assert.equal(getSegmentFromSize(99, 0.99), 'SMB');
   });
 
   test('a lead meeting neither the Enterprise nor Mid-Market thresholds is classified as SMB', () => {
-    // @pmc-criterion master:business-rule:enterprise-thresholds-determine-lead-segment
     assert.equal(getSegmentFromSize(0, 0), 'SMB');
     assert.equal(getSegmentFromSize(10, 0.1), 'SMB');
   });

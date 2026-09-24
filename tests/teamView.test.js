@@ -89,7 +89,9 @@ describe('Sales operations team view (TC-2 — bmb_PKO7Pv4DWm07)', () => {
   });
 
   test('routing a new lead updates the same representative\'s current routing load alongside their unchanged capacity, territory, and segment', () => {
-    // @pmc-criterion master:use-case:balance-territory-coverage
+    // The declared protection binding for the balance-territory-coverage
+    // criterion lives on the team-view rendering test above so the criterion
+    // keeps a single, unambiguous declared binding.
     document.getElementById('state').value = 'NY';
     document.getElementById('leadSource').value = 'Inbound Web Form';
     document.getElementById('employees').value = '1500';
