@@ -24,11 +24,52 @@ describe('Executive referral routing (TC-1 — bmb_e_O9SGVZ3Vot)', () => {
 
     const result = routeLead(lead);
 
+    // Pin every observable field of the routed result for this scenario so
+    // the test fails on ANY deviation in the assignment or escalation
+    // outcome, not only on the two fields checked individually below.
+    assert.deepEqual(result, {
+      assignedRep: 'Avery Johnson',
+      territory: 'Northeast',
+      segment: 'Enterprise',
+      productFocus: 'Azure / Fabric / Copilot',
+      reason: 'Executive Referral: routed to Avery Johnson (Northeast Enterprise)',
+      escalation: 'VP Sales direct engagement',
+      sla: 'Same-day contact required; VP Sales notified',
+      isOverflow: false,
+      isSDRPool: false,
+    });
+
+    // Outcome-focused assertions restated explicitly: this is the behavior
+    // the criterion pins — assignment to Avery Johnson, plus VP Sales
+    // escalation — so these must fail independently of the deepEqual above
+    // if either outcome is removed or changed.
     assert.equal(result.assignedRep, 'Avery Johnson');
     assert.equal(result.territory, 'Northeast');
     assert.equal(result.escalation, 'VP Sales direct engagement');
     assert.equal(result.sla, 'Same-day contact required; VP Sales notified');
     assert.equal(result.isSDRPool, false);
+
+    // Contrast within the same test: a lead whose state, size, and company
+    // profile would normally route to a completely different rep and
+    // segment under standard territory/segment rules (Skyler Williams,
+    // Mid-Market, Texas) must still be overridden to Avery Johnson with the
+    // VP Sales escalation once the source is an Executive Referral. This
+    // proves the assignment is driven by the Executive Referral source
+    // itself, not a coincidental territory/segment match on the first lead.
+    const overrideLead = {
+      companyName: 'Some Other Prospect LLC',
+      state: 'TX',
+      employees: 50,
+      arr: 0.1,
+      leadSource: 'Executive Referral',
+    };
+
+    const overrideResult = routeLead(overrideLead);
+
+    assert.equal(overrideResult.assignedRep, 'Avery Johnson');
+    assert.equal(overrideResult.territory, 'Northeast');
+    assert.equal(overrideResult.escalation, 'VP Sales direct engagement');
+    assert.equal(overrideResult.sla, 'Same-day contact required; VP Sales notified');
   });
 
   test('contrast: a non-executive-referral lead with the same company profile is routed elsewhere and is not escalated to VP Sales', () => {
